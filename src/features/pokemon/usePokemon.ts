@@ -3,19 +3,19 @@ import { apiPokemonDetail, apiSpecies, apiEvolutionName, flavorEN } from "../../
 import { toPokemonVM } from "../../lib/adapters";
 
 export function usePokemon(name?: string) {
-    const enabled = !!name; // hanya fetch kalau ada nama
+    const enabled = !!name; // only fetch if there is a name
 
-    // detailQ: query utama. select = ubah data API -> ViewModel (VM)
+    // detailQ: main query. select = change data API -> ViewModel (VM)
     const detailQ = useQuery({
         enabled,
         queryKey: ["pokemon", name],
-        queryFn: () => apiPokemonDetail(name!),    // name! aman karena enabled=!!name
-        select: toPokemonVM,                 // => detailQ.data langsung berupa VM
+        queryFn: () => apiPokemonDetail(name!),    // name! safe because enabled=!!name
+        select: toPokemonVM,                 // => detailQ.data directly in the form of VM
         retry: 1,
         staleTime: 600_000
     });
 
-    // pendamping (boleh gagal tanpa memblokir UI)
+    // companion (may fail without blocking UI)
     const speciesQ = useQuery({
         enabled,
         queryKey: ["species", name],

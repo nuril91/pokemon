@@ -60,7 +60,7 @@ const EvolutionChain = z.object({
     })
 });
 
-// endopoints
+// endpoints
 export async function apiListPokemons(limit: number, offset: number) {
     const raw = await fjson(`${BASE}/pokemon?limit=${limit}&offset=${offset}`);
     return PokeList.parse(raw);

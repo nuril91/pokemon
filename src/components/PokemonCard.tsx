@@ -11,7 +11,7 @@ export default function PokemonCard({ name, url }: Props) {
     const id = useMemo(() => getIdFromUrl(url), [url]);
     const img = officialArtworkUrl(id);
 
-    // visible = kartu sudah masuk viewport → baru fetch detail
+    // visible = card has entered viewport → then fetch details
     const [visible, setVisible] = useState(false);
     const rootRef = useRef<HTMLAnchorElement | null>(null);
     useEffect(() => {
@@ -22,13 +22,13 @@ export default function PokemonCard({ name, url }: Props) {
             setVisible(true);
             io.disconnect();
         }
-        }, { root: null, rootMargin: "400px" }); // prefetch sedikit sebelum kelihatan
+        }, { root: null, rootMargin: "400px" }); // prefetch a bit before it's visible
         io.observe(el);
         return () => io.disconnect();
     }, []);
 
     const qc = useQueryClient();
-    // Fetch detail (types, dll) hanya saat visible
+    // Fetch details (types, etc.) only when visible
     const { data, isLoading, isError } = useQuery({
         queryKey: ["pokemon", name],
         queryFn: () => apiPokemonDetail(name),
@@ -37,7 +37,7 @@ export default function PokemonCard({ name, url }: Props) {
         staleTime: 600_000
     });
 
-    // Prefetch untuk navigasi makin ngebut
+    // Prefetch for faster navigation
     function prefetch() {
         qc.prefetchQuery({ queryKey: ["pokemon", name], queryFn: () => apiPokemonDetail(name) });
     }
@@ -60,7 +60,7 @@ export default function PokemonCard({ name, url }: Props) {
             </div>
 
             <div className="mt-2 flex gap-2">
-            {/* -- Tiga state: loading detail, sukses, atau error -- */}
+            {/* -- Three states: loading detail, success, or error -- */}
             {isLoading && <div className="h-4 w-16 bg-slate-200 dark:bg-slate-700 rounded" />}
             {data && data.types.map(t => <TypeChip key={t.type.name} type={t.type.name} />)}
             {isError && <span className="text-xs text-slate-500">types unavailable</span>}

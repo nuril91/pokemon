@@ -25,7 +25,7 @@ export default function PokemonDetailPage() {
         );
     }
 
-    // vm langsung dari detailQ.data (karena select: toPokemonVM)
+    // vm directly from detailQ.data (because select: toPokemonVM)
     const vm = detailQ.data!;
     const primaryType = vm.types[0] ?? "normal";
     const bg = gradientOf(primaryType);
